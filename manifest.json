@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+  "name": "Only_show_posted_from_Nicorepo",
+  "version": "0.1",
+ 
+  "description": "show nicorepo",
+
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.nicovideo.jp/my/top"],
+      "js": ["main.js"]
+    }
+  ]
+
+}
