@@ -4,10 +4,7 @@ class Nicorepo {
 
   changeDivButton(button, name, specific) {
     button.innerText = name
-    button.style.display = 'inline-block'
-    button.style.marginRight = '1rem'
-    button.style.backgroundColor = 'white'
-    button.style.padding = '1px'
+    button.setAttribute('id', specific)
 
     if(specific === 'uploaded') {
       button.addEventListener('click', () => {
@@ -21,8 +18,7 @@ class Nicorepo {
       })
     }
 
-
-    this.tabContainer.appendChild(button)
+    this.settingContainer[0].appendChild(button)
   }
 
   addData(data) {
@@ -121,34 +117,16 @@ class Nicorepo {
   }
 
   constructor() {
+
     this.clickCount = 0
+
     this.nicorepoArray = []
     this.gotData = []
     this.upload = []
-
     this.xhr = new XMLHttpRequest()
-    this.xhr.onreadystatechange = () => {
-      if (this.xhr.readyState === 4 && this.xhr.status === 200) {
-        const tmp = JSON.parse(this.xhr.responseText)
-
-        if (0 < tmp.data.length) {
-          this.nicorepoArray.push(tmp)
-          this.cursor =  'cursor=' + tmp.meta.minId + '&'
-        }
-
-        this.show()
-        this.loader()
-      }
-    }
-
-
     this.cursor = ''
 
-    this.tabContainer = document.createElement('div')
-    this.tabContainer.setAttribute('id', 'customTab')
-
     this.settingContainer = document.getElementsByClassName('setting-container')
-    this.settingContainer[0].appendChild(this.tabContainer)
 
     this.uploadedButton = document.createElement('div')
     this.changeDivButton(this.uploadedButton, '動画投稿のみ', 'uploaded')
@@ -156,14 +134,6 @@ class Nicorepo {
     this.latestButton = document.createElement('div')
     this.changeDivButton(this.latestButton, '最新ニコレポ', 'latest')
 
-    this.container = {}
-    this.mainTab = {}
-    this.uploadedTab = {}
-    
-    this.initTab()
-  }
-
-  initTab() {
     this.container = document.getElementsByClassName('nicorepo-page')
     this.mainTab = document.getElementsByClassName('NicorepoTimeline timeline')
     this.mainTab[0].style.display = ''
@@ -173,6 +143,28 @@ class Nicorepo {
     this.uploadedTab.style.display = 'none'
 
     this.container[0].appendChild(this.uploadedTab)
+
+    console.log('nyan')
+    console.log('bow')
+    /*
+    this.mainTab = this.container[0].getElementsByClassName('NicorepoTimeline timeline')[1]
+    this.mainTab[0].style.display = ''
+    */
+
+    this.xhr.onreadystatechange = () => {
+      if (this.xhr.readyState === 4 && this.xhr.status === 200) {
+        const tmp = JSON.parse(this.xhr.responseText)
+
+        if (0 < tmp.data.length) {
+          this.nicorepoArray.push(tmp)
+          this.cursor =  'cursor=' + tmp.meta.minId + '&'
+          // this.target = document.getElementsByClassName('NicorepoTimeline timeline')
+        }
+
+        this.show()
+        this.loader()
+      }
+    }
 
   }
 
@@ -196,6 +188,13 @@ class Nicorepo {
           } else {
             this.gotData.push(j)
 
+            /*
+            const element = document.createElement('div')
+            element.innerText = j.video.title
+            */
+            // this.target[0].appendChild(addData(j))
+
+            // console.log(j)
             this.addData(j)
           }
 
@@ -209,9 +208,5 @@ class Nicorepo {
   }
 }
 
-const main = () => {
-  const ext = new Nicorepo()
-  ext.run()
-}
-
-window.onload(setTimeout(main, 1000))
+const ext = new Nicorepo()
+ext.run()
